@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import "./App.css";
+import { TodoTask } from "./Components/TodoTask";
 import { ITask } from "./Interfaces";
 
 const App: React.FC = () => {
@@ -21,7 +22,17 @@ const App: React.FC = () => {
       deadline: deadline,
     };
     setTodoList([...todoList, newTask]);
-    console.log(todoList);
+    setTask("");
+    setDeadline(0);
+  };
+
+  const completeTask = (taskNameToDelete: string): void => {
+    setTodoList(
+      todoList.filter((task) => {
+        // console.log(task, "hola");
+        return task.taskName != taskNameToDelete;
+      })
+    );
   };
 
   return (
@@ -33,17 +44,23 @@ const App: React.FC = () => {
             placeholder="Tarea..."
             onChange={handleChange}
             name="task"
+            value={task}
           />
           <input
             type="number"
             placeholder="Tiempo limite (Días) ..."
             onChange={handleChange}
             name="deadline"
+            value={deadline}
           />
         </div>
         <button onClick={addTask}>Añadir tarea</button>
       </div>
-      <div className="todoList"></div>
+      <div className="todoList">
+        {todoList.map((task: ITask, key: number) => {
+          return <TodoTask key={key} task={task} completeTask={completeTask} />;
+        })}
+      </div>
     </div>
   );
 };
